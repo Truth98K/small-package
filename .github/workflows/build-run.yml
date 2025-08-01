@@ -26,7 +26,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y zstd makeself
-          wget https://downloads.openwrt.org/releases/24.10.2/targets/x86/64/openwrt-sdk-24.10.2-x86-64_gcc-12.3.0_musl.Linux-x86_64.tar.zst -O sdk.tar.zst
+          wget https://downloads.openwrt.org/releases/24.10.2/targets/x86/64/openwrt-sdk-24.10.2-x86-64_gcc-13.3.0_musl.Linux-x86_64.tar.zst -O sdk.tar.zst
           tar --use-compress-program=unzstd -xf sdk.tar.zst
           SDK_DIR=$(ls -d openwrt-sdk-*)
           echo "SDK_DIR=$SDK_DIR" >> $GITHUB_ENV
