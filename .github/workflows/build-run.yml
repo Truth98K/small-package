@@ -1,4 +1,4 @@
-name: Build luci-app-quickstart from your own repo
+name: Build luci-app-quickstart with OpenWrt 24.10.2 SDK
 
 on:
   workflow_dispatch:
@@ -18,10 +18,12 @@ jobs:
       - name: Checkout your repository (with package source)
         uses: actions/checkout@v4
 
-      - name: Download and extract OpenWrt SDK
+      - name: Install zstd and download OpenWrt SDK 24.10.2
         run: |
-          wget https://downloads.openwrt.org/releases/23.05.3/targets/x86/64/openwrt-sdk-23.05.3-x86-64_gcc-12.3.0_musl.Linux-x86_64.tar.xz -O sdk.tar.xz
-          tar -xf sdk.tar.xz
+          sudo apt-get update
+          sudo apt-get install -y zstd
+          wget https://downloads.openwrt.org/releases/24.10.2/targets/x86/64/openwrt-sdk-24.10.2-x86-64_gcc-12.3.0_musl.Linux-x86_64.tar.zst -O sdk.tar.zst
+          tar --use-compress-program=unzstd -xf sdk.tar.zst
           SDK_DIR=$(ls -d openwrt-sdk-*)
           echo "SDK_DIR=$SDK_DIR" >> $GITHUB_ENV
 
