@@ -1,0 +1,72 @@
+name: Build luci-app-quickstart from your own repo
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g. 1.0.0)'
+        required: true
+        default: '1.0.0'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout your repository (with package source)
+        uses: actions/checkout@v4
+
+      - name: Download and extract OpenWrt SDK
+        run: |
+          wget https://downloads.openwrt.org/releases/23.05.3/targets/x86/64/openwrt-sdk-23.05.3-x86-64_gcc-12.3.0_musl.Linux-x86_64.tar.xz -O sdk.tar.xz
+          tar -xf sdk.tar.xz
+          SDK_DIR=$(ls -d openwrt-sdk-*)
+          echo "SDK_DIR=$SDK_DIR" >> $GITHUB_ENV
+
+      - name: Copy package source to SDK
+        run: |
+          cp -r package/luci-app-quickstart ${{ env.SDK_DIR }}/package/
+          cp -r package/luci-i18n-quickstart-zh-cn ${{ env.SDK_DIR }}/package/
+
+      - name: Build luci-app-quickstart and language pack
+        run: |
+          cd ${{ env.SDK_DIR }}
+          make defconfig
+          make package/luci-app-quickstart/compile V=s
+          make package/luci-i18n-quickstart-zh-cn/compile V=s
+
+      - name: Prepare runpkg directory
+        run: |
+          cd ${{ env.SDK_DIR }}
+          mkdir -p runpkg
+          cp bin/packages/*/luci-app-quickstart_*.ipk runpkg/
+          cp bin/packages/*/luci-i18n-quickstart-zh-cn_*.ipk runpkg/
+          cp ../../install.sh runpkg/
+          chmod +x runpkg/install.sh
+
+      - name: Install makeself and build .run installer
+        run: |
+          cd ${{ env.SDK_DIR }}
+          sudo apt-get update
+          sudo apt-get install -y makeself
+          VERSION=${{ github.event.inputs.version }}
+          OUTPUT="../../luci-app-quickstart_${VERSION}_x86_64.run"
+          makeself --nox11 runpkg "$OUTPUT" "luci-app-quickstart Installer v$VERSION" ./install.sh
+          echo "RUNFILE=$OUTPUT" >> $GITHUB_ENV
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: luci-app-quickstart-run
+          path: ${{ env.RUNFILE }}
+
+      - name: Create GitHub Release and upload .run
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ github.event.inputs.version }}
+          name: luci-app-quickstart v${{ github.event.inputs.version }}
+          files: ${{ env.RUNFILE }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
