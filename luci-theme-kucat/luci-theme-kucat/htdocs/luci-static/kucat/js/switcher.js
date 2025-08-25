@@ -16,19 +16,20 @@ async function syncgetUci() {
         if (!response.ok) throw new Error("Network error");
         return await response.json();
     } catch (error) {
-        console.error("Failed to fetch theme config:", error);
+        console.error("Fetch config failed, using default:", error);
         return {
             success: false,
-            bgqs: "0",
+            bgqs: "1",
             primaryrgbm: "45,102,147",
             primaryrgbmts: "0",
-            mode: "light" // Default to light for safety
+            mode: "light"
         };
     }
 }
 // Theme Detection
 function getTimeBasedTheme() {
     const hour = new Date().getHours();
+    // console.debug('hour:', hour);
     return (hour < 6 || hour >= 18) ? 'dark' : 'light';
 }
 
@@ -39,7 +40,7 @@ async function updateThemeVariables(theme) {
   try {
     const config = await syncgetUci();
         const primaryRgbbody = isDark ? '33,45,60' : '248,248,248';
-        const bgqsValue = config.bgqs || "0"; 
+        const bgqsValue = config.bgqs || "1"; 
         const rgbmValue = config.primaryrgbm || '45,102,147';
         const rgbmtsValue = config.primaryrgbmts || '0';
         const vars = bgqsValue === "0" ? {
@@ -54,10 +55,12 @@ async function updateThemeVariables(theme) {
             '--primary-rgbbody': primaryRgbbody,
             '--menu-bgcolor': `rgba(${primaryRgbbody},${rgbmtsValue})`,
         };
+    
 
         Object.entries(vars).forEach(([key, value]) => {
         root.style.setProperty(key, value);
       });
+
         if (window.LuciForm) {
             LuciForm.refreshVisibility();
         }
@@ -79,29 +82,38 @@ document.getElementById('themeToggle').addEventListener('click', function() {
 
     document.body.setAttribute('data-theme', newTheme);
     
+     // console.debug('switcher:', switcher.dataset.theme,newTheme);
     syncToUci(newTheme);
     updateThemeVariables(newTheme);
 });
 
 window.addEventListener('DOMContentLoaded', async function() {
 
-        const config = await syncgetUci();
-        const themeToApply = config.mode === 'auto' 
-            ? getTimeBasedTheme() 
-            : (config.mode || 'light');
-    const switcher = document.getElementById('themeToggle');
-    switcher.dataset.theme = themeToApply;
-    document.body.setAttribute('data-theme', themeToApply);
+    const config = await syncgetUci();
     
-    if (themeToApply === 'dark') {
+    function applyTheme(theme) {
+        document.body.setAttribute('data-theme', theme);
+        const meta = document.querySelector('meta[name="theme-color"]');
+        const switcher = document.getElementById('themeToggle');
+        switcher.dataset.theme = theme;
+        if (theme === 'dark') {
         switcher.querySelector('.pdboy-dark').classList.add('active');
         switcher.querySelector('.pdboy-light').classList.remove('active');
     } else {
         switcher.querySelector('.pdboy-light').classList.add('active');
         switcher.querySelector('.pdboy-dark').classList.remove('active');
     }
+        if (meta) {
+            meta.content = theme === 'dark' ? '#1a1a1a' : '#ffffff';
+        }
+    }
+        const themeToApply = config.mode === 'auto' 
+            ? getTimeBasedTheme() 
+            : (config.mode || 'light');
 
-    syncToUci(themeToApply);
+
+    // console.debug('switcher:', config.mode,themeToApply);
+    applyTheme(themeToApply);
     await updateThemeVariables(themeToApply);
 });
 

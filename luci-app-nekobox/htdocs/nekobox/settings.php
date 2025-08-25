@@ -1,5 +1,6 @@
 
 <?php
+include './cfg.php';
 function getSingboxVersion() {
     $singBoxPath = '/usr/bin/sing-box'; 
     $command = "$singBoxPath version 2>&1";
@@ -116,75 +117,17 @@ $metaVersion = getMetaVersion();
 $razordVersion = getRazordVersion();
 
 ?>
-<?php
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'clearNekoTmpDir') {
-    $nekoDir = '/tmp/neko';
-    $response = [
-        'success' => false,
-        'message' => ''
-    ];
 
-    if (is_dir($nekoDir)) {
-        if (deleteDirectory($nekoDir)) {
-            $response['success'] = true;
-            $response['message'] = 'Directory cleared successfully.';
-        } else {
-            $response['message'] = 'Failed to delete the directory.';
-        }
-    } else {
-        $response['message'] = 'The directory does not exist.';
-    }
-
-    header('Content-Type: application/json');
-    echo json_encode($response);
-    exit;
-}
-
-function deleteDirectory($dir) {
-    if (!file_exists($dir)) {
-        return true;
-    }
-
-    if (!is_dir($dir)) {
-        return unlink($dir);
-    }
-
-    foreach (scandir($dir) as $item) {
-        if ($item == '.' || $item == '..') {
-            continue;
-        }
-
-        if (!deleteDirectory($dir . DIRECTORY_SEPARATOR . $item)) {
-            return false;
-        }
-    }
-
-    return rmdir($dir);
-}
-?>
 <title>Settings - Nekobox</title>
 <?php include './ping.php'; ?>
 
-<style>
-  #portModal table tbody td {
-    color: var(--text-primary) !important;
-  }
-</style>
-
 <div class="container-sm container-bg mt-4">
-  <div class="row">
-    <a href="./index.php" class="col btn btn-lg text-nowrap"><i class="bi bi-house-door"></i> <span data-translate="home">Home</span></a>
-    <a href="./dashboard.php" class="col btn btn-lg text-nowrap"><i class="bi bi-bar-chart"></i> <span data-translate="panel">Panel</span></a>
-    <a href="./singbox.php" class="col btn btn-lg text-nowrap"><i class="bi bi-box"></i> <span data-translate="document">Document</span></a> 
-    <a href="./settings.php" class="col btn btn-lg text-nowrap"><i class="bi bi-gear"></i> <span data-translate="settings">Settings</span></a>
-<div class="container px-4 theme-settings-container text-center">
+<?php include 'navbar.php'; ?>
+<div class="container-sm container px-4 theme-settings-container text-center">
   <h2 class="text-center p-2 mb-2" data-translate="component_update">Component Update</h2>
-  <button type="button" class="btn btn-success mb-3 me-3" onclick="toggleControlPanel()"><i class="bi bi-eyedropper"> </i><span data-translate="control_panel">Control_Panel</span></button>
-  <button type="button" id="toggleIpStatusBtn" class="btn btn-warning mb-3 me-3" onclick="toggleIpStatusBar()"><i class="bi bi-eye-slash"> </i><span data-translate="hide_ip_info">Hide IP Information</span></button>
-  <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#portModal"><i class="bi bi-plug"></i> <span data-translate="viewPortInfoButton">View Port Information</span></button>
   <div class="row g-4">
     <div class="col-md-6">
-      <div class="card shadow-sm">
+      <div class="card">
         <div class="card-body text-center">
           <h5 class="card-title" data-translate="client_version_title">Client Version</h5>
           <p id="cliver" class="card-text" style="font-family: monospace;"></p>
@@ -201,7 +144,7 @@ function deleteDirectory($dir) {
     </div>
 
     <div class="col-md-6">
-      <div class="card shadow-sm">
+      <div class="card">
         <div class="card-body text-center">
           <h5 class="card-title" data-translate="ui_panel_title">Ui Panel</h5>
           <p class="card-text"><?php echo htmlspecialchars($uiVersion); ?></p>
@@ -218,7 +161,7 @@ function deleteDirectory($dir) {
     </div>
 
     <div class="col-md-6">
-      <div class="card shadow-sm">
+      <div class="card">
         <div class="card-body text-center">
           <h5 class="card-title" data-translate="singbox_core_version_title">Sing-box Core Version</h5>
           <p id="singBoxCorever" class="card-text"><?php echo htmlspecialchars($singBoxVersion); ?></p>
@@ -235,7 +178,7 @@ function deleteDirectory($dir) {
     </div>
 
     <div class="col-md-6">
-      <div class="card shadow-sm">
+      <div class="card">
         <div class="card-body text-center">
           <h5 class="card-title" data-translate="mihomo_core_version_title">Mihomo Core Version</h5>
           <p class="card-text"><?php echo htmlspecialchars($mihomoVersion); ?></p>
@@ -253,9 +196,9 @@ function deleteDirectory($dir) {
   </div>
 </div>
 
-<div class="container px-4 theme-settings-container">
+<div class="container-sm container px-4 theme-settings-container">
   <h2 class="text-center mb-4 mt-4" data-translate="aboutTitle"></h2>
-  <div class="card mb-5 shadow-sm">
+  <div class="card mb-5">
     <div class="card-body text-center feature-box">
       <h5 data-translate="nekoBoxTitle"></h5>
       <p data-translate="nekoBoxDescription"></p>
@@ -264,7 +207,7 @@ function deleteDirectory($dir) {
 
   <div class="row g-4 mb-5">
     <div class="col-md-4 d-flex">
-      <div class="card flex-fill shadow-sm">
+      <div class="card flex-fill">
         <div class="card-body text-center">
           <h6 data-translate="simplifiedConfiguration"></h6>
           <p data-translate="simplifiedConfigurationDescription"></p>
@@ -272,7 +215,7 @@ function deleteDirectory($dir) {
       </div>
     </div>
     <div class="col-md-4 d-flex">
-      <div class="card flex-fill shadow-sm">
+      <div class="card flex-fill">
         <div class="card-body text-center">
           <h6 data-translate="optimizedPerformance"></h6>
           <p data-translate="optimizedPerformanceDescription"></p>
@@ -280,7 +223,7 @@ function deleteDirectory($dir) {
       </div>
     </div>
     <div class="col-md-4 d-flex">
-      <div class="card flex-fill shadow-sm">
+      <div class="card flex-fill">
         <div class="card-body text-center">
           <h6 data-translate="seamlessExperience"></h6>
           <p data-translate="seamlessExperienceDescription"></p>
@@ -291,12 +234,12 @@ function deleteDirectory($dir) {
 
   <div class="row g-4 mb-5">
     <div class="col-md-6 d-flex flex-column">
-      <div class="card shadow-sm flex-fill">
+      <div class="card flex-fill">
         <div class="card-body">
           <h5 class="mb-4 text-center">
             <i data-feather="tool"></i> <span data-translate="toolInfo"></span>
           </h5>
-          <div class="card shadow-sm">
+          <div class="card">
             <div class="card-body p-3">
               <div class="table-responsive">
                 <table class="table table-borderless text-center mb-0">
@@ -327,12 +270,12 @@ function deleteDirectory($dir) {
     </div>
 
     <div class="col-md-6 d-flex flex-column">
-      <div class="card shadow-sm flex-fill">
+      <div class="card flex-fill">
         <div class="card-body">
           <h5 class="mb-4 text-center">
             <i data-feather="paperclip"></i> <span data-translate="externalLinks"></span>
           </h5>
-          <div class="card shadow-sm">
+          <div class="card">
             <div class="card-body p-3">
               <div class="table-responsive">
                 <table class="table table-borderless text-center mb-0">
@@ -397,7 +340,7 @@ function deleteDirectory($dir) {
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" onclick="clearNekoTmpDir()" data-translate-title="delete_old_config"><i class="bi bi-trash"></i> <span data-translate="clear_config">Clear Config</span></button>
+                <button type="button" class="btn btn-danger" onclick="clearNekoTmpDir()" data-tooltip="delete_old_config"><i class="bi bi-trash"></i> <span data-translate="clear_config">Clear Config</span></button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-translate="close_button">cancel</button>
                 <button type="button" class="btn btn-primary" onclick="confirmUpdateVersion()" data-translate="confirmButton">confirm</button>
             </div>
@@ -438,7 +381,7 @@ function deleteDirectory($dir) {
             <div class="modal-body">
                 <div class="alert alert-warning text-start" role="alert">
                     <strong data-translate="note_label"></strong>
-                    <span data-translate="options_modal_note">
+                    <span data-translate="options_modal_note" class="note-text">
                         Please prioritize selecting the Channel 1 version for updates to ensure compatibility. The system will first check and dynamically generate the latest version number for download. If the Channel 1 update is unavailable, you can try the Channel 2 version.
                     </span>
                 </div>
@@ -472,7 +415,7 @@ function deleteDirectory($dir) {
             </div>
             <div class="modal-body">
                 <div class="alert alert-warning text-start" role="alert">
-                    <strong data-translate="note_label">Note:</strong>
+                    <strong data-translate="note_label"></strong>
                     <span data-translate="operation_modal_note">
                         Please select an operation based on your requirements
                     </span>
@@ -488,7 +431,8 @@ function deleteDirectory($dir) {
                         Update config file (backup)
                     </button>
                 </div>
-                <div class="d-flex justify-content-end mt-3">
+            </div>
+                <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-translate="close_button">
                         Close
                     </button>
@@ -496,7 +440,6 @@ function deleteDirectory($dir) {
             </div>
         </div>
     </div>
-</div>
 
 <div class="modal fade" id="versionSelectionModal" tabindex="-1" aria-labelledby="versionSelectionModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-lg">
@@ -520,6 +463,8 @@ function deleteDirectory($dir) {
                     <option value="v1.11.0-beta.15">v1.11.0-beta.15</option>
                     <option value="v1.11.0-beta.20">v1.11.0-beta.20</option>
                     <option value="v1.12.0-rc.3">v1.12.0-rc.3</option>
+                    <option value="v1.12.0-rc.4">v1.12.0-rc.4</option>
+                    <option value="v1.13.0-alpha.1">v1.13.0-alpha.1</option>
                 </select>
                 <input type="text" id="manualVersionInput" class="form-control mt-2" placeholder="For example: v1.12.0-rc.3">
                 <button type="button" class="btn btn-secondary mt-2" onclick="addManualVersion()" data-translate="addVersionButton">Add Version</button>
@@ -620,87 +565,6 @@ function deleteDirectory($dir) {
         </div>
     </div>
 </div>
-
-<div class="modal fade" id="portModal" tabindex="-1" aria-labelledby="portModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-xl">
-    <div class="modal-content">
-      <form id="portForm" method="POST" action="./save_ports.php">
-        <div class="modal-header">
-          <h5 class="modal-title" id="portModalLabel" data-translate="portInfoTitle">Port Information</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <table class="table table-bordered table-striped text-center align-middle w-100 mb-0">
-            <thead class="table-dark">
-              <tr>
-                <th style="width: 20%;" data-translate="componentName">Component Name</th>
-                <th style="width: 20%;">socks-port</th>
-                <th style="width: 20%;">mixed-port</th>
-                <th style="width: 13%;">redir-port</th>
-                <th style="width: 13%;">port</th>
-                <th style="width: 14%;">tproxy-port</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Mihomo</td>
-                <td><input type="number" class="form-control text-center" name="mihomo_socks" value="<?= htmlspecialchars($neko_cfg['socks']) ?>"></td>
-                <td><input type="number" class="form-control text-center" name="mihomo_mixed" value="<?= htmlspecialchars($neko_cfg['mixed']) ?>"></td>
-                <td><input type="number" class="form-control text-center" name="mihomo_redir" value="<?= htmlspecialchars($neko_cfg['redir']) ?>"></td>
-                <td><input type="number" class="form-control text-center" name="mihomo_port" value="<?= htmlspecialchars($neko_cfg['port']) ?>"></td>
-                <td><input type="number" class="form-control text-center" name="mihomo_tproxy" value="<?= htmlspecialchars($neko_cfg['tproxy']) ?>"></td>
-              </tr>
-              <tr>
-                <td>Sing-box</td>
-                <td><input type="number" class="form-control text-center" name="singbox_http" value="<?= htmlspecialchars($http_port) ?>"></td>
-                <td><input type="number" class="form-control text-center" name="singbox_mixed" value="<?= htmlspecialchars($mixed_port) ?>"></td>
-                <td>—</td>
-                <td>—</td>
-                <td>—</td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="text-danger text-center fw-bold mt-3 mb-1" data-translate="portChangeNotice">
-            Port changes will take effect after restarting the service.
-          </div>
-        </div>
-      </form>
-      <div class="modal-footer justify-content-end">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-translate="closeButton">Close</button>
-        <button type="submit" form="portForm" class="btn btn-primary" data-translate="save">Save</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-    function clearNekoTmpDir() {
-        fetch('', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'action=clearNekoTmpDir'
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert(translations["tmp_neko_cleared"] || "The /tmp/neko directory has been cleared successfully.");
-            } else {
-                if (data.message === 'The directory does not exist.') {
-                    alert(translations["tmp_neko_not_exist"] || "The /tmp/neko directory does not exist. No action was taken.");
-                } else {
-                    alert('Failed to clear the /tmp/neko directory: ' + data.message);
-                }
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while trying to clear the /tmp/neko directory.');
-        });
-    }
-</script>
-
 
 <script>
 let selectedSingboxVersion = 'v1.11.0-alpha.10';  
@@ -906,7 +770,7 @@ function initiateUpdate(url, logMessage, description) {
     document.getElementById('logOutput').textContent = logMessage;
     xhr.onload = function() {
         if (xhr.status === 200) {
-            document.getElementById('logOutput').textContent += '\n' + (translations['updateCompleted'] || '更新完成！');
+            document.getElementById('logOutput').textContent += '\n' + (translations['updateCompleted'] || 'Update completed!');
             document.getElementById('logOutput').textContent += '\n' + xhr.responseText;
             setTimeout(function() {
                 $('#updateModal').modal('hide');
@@ -915,12 +779,12 @@ function initiateUpdate(url, logMessage, description) {
                 }, 500);
             }, 10000);
         } else {
-            document.getElementById('logOutput').textContent += '\n' + (translations['errorOccurred'] || '发生错误：') + xhr.statusText;
+            document.getElementById('logOutput').textContent += '\n' + (translations['errorOccurred'] || 'Error occurred: ') + xhr.statusText;
         } 
     };
 
     xhr.onerror = function() {
-        document.getElementById('logOutput').textContent += '\n' + (translations['networkError'] || '网络错误，请稍后再试。');
+        document.getElementById('logOutput').textContent += '\n' + (translations['networkError'] || 'Network error');
     };
 
     xhr.send();
@@ -953,7 +817,7 @@ function checkVersion(outputId, updateFiles, currentVersions) {
     modalContent.innerHTML = `
         <div class="text-center py-4">
             <div class="spinner-border text-info mb-3" role="status"></div>
-            <div>${translations['checkingVersion'] || '正在检查新版本...'}</div>
+            <div>${translations['checkingVersion'] || 'Checking for new version...'}</div>
         </div>
     `;
 
@@ -963,7 +827,7 @@ function checkVersion(outputId, updateFiles, currentVersions) {
         return fetch(file.url + '?check_version=true')
             .then(response => {
                 if (!response.ok) {
-                    throw new Error(`${translations['requestFailed'] || '请求失败'}: ${file.name}`);
+                    throw new Error(`${translations['requestFailed'] || 'Request failed'}: ${file.name}`);
                 }
                 return response.text();
             })
@@ -974,7 +838,7 @@ function checkVersion(outputId, updateFiles, currentVersions) {
                     rows.push(`
                         <tr>
                             <td class="text-center align-middle">${file.name}</td>
-                            <td class="text-center align-middle">${currentVersions[file.name] || translations['unknown'] || '未知'}</td>
+                            <td class="text-center align-middle">${currentVersions[file.name] || translations['unknown'] || 'Unknown'}</td>
                             <td class="text-center align-middle">${newVersion}</td>
                         </tr>
                     `);
@@ -993,8 +857,8 @@ function checkVersion(outputId, updateFiles, currentVersions) {
                     rows.push(`
                         <tr>
                             <td class="text-center align-middle">${file.name}</td>
-                            <td class="text-center align-middle">${currentVersions[file.name] || translations['unknown'] || '未知'}</td>
-                            <td class="text-center align-middle text-warning">${translations['cannotParseVersion'] || '无法解析版本信息'}</td>
+                            <td class="text-center align-middle">${currentVersions[file.name] || translations['unknown'] || 'Unknown'}</td>
+                            <td class="text-center align-middle text-warning">${translations['cannotParseVersion'] || 'Unable to parse version information'}</td>
                         </tr>
                     `);
                 }
@@ -1003,8 +867,8 @@ function checkVersion(outputId, updateFiles, currentVersions) {
                 rows.push(`
                     <tr>
                         <td class="text-center align-middle">${file.name}</td>
-                        <td class="text-center align-middle">${currentVersions[file.name] || translations['unknown'] || '未知'}</td>
-                        <td class="text-center align-middle text-danger">${translations['networkError'] || '网络错误'}</td>
+                        <td class="text-center align-middle">${currentVersions[file.name] || translations['unknown'] || 'Unknown'}</td>
+                        <td class="text-center align-middle text-danger">${translations['networkError'] || 'Network error'}</td>
                     </tr>
                 `);
             });
@@ -1012,14 +876,14 @@ function checkVersion(outputId, updateFiles, currentVersions) {
 
     Promise.all(requests).then(() => {
         modalContent.innerHTML = `
-            <div class="card shadow-sm">
+            <div class="card">
                 <div class="card-body p-3">
-                    <table class="table table-borderless mb-0">
-                        <thead>
+                    <table class="table table-light mb-0">
+                        <thead class="table-light">
                             <tr>
-                                <th class="text-center">${translations['componentName'] || '组件名称'}</th>
-                                <th class="text-center">${translations['currentVersion'] || '当前版本'}</th>
-                                <th class="text-center">${translations['latestVersion'] || '最新版本'}</th>
+                                <th class="text-center">${translations['componentName'] || 'Component name'}</th>
+                                <th class="text-center">${translations['currentVersion'] || 'Current version'}</th>
+                                <th class="text-center">${translations['latestVersion'] || 'Latest version'}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1176,6 +1040,16 @@ document.getElementById('checkCliverButton').addEventListener('click', function 
             return;
         }
 
+        const storageKey = 'singboxVersionWarning';
+        let lastData = localStorage.getItem(storageKey);
+        let lastInfo = lastData ? JSON.parse(lastData) : null;
+        const now = Date.now();
+        const DAY_24 = 24 * 60 * 60 * 1000;
+
+        if (lastInfo && lastInfo.version === currentVersion && (now - lastInfo.timestamp < DAY_24)) {
+            return;
+        }
+
         var modalHtml = `
             <div class="modal fade" id="versionWarningModal" tabindex="-1" aria-labelledby="versionWarningModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
@@ -1202,6 +1076,11 @@ document.getElementById('checkCliverButton').addEventListener('click', function 
         var modal = new bootstrap.Modal(document.getElementById('versionWarningModal'));
         modal.show();
 
+        localStorage.setItem(storageKey, JSON.stringify({
+            version: currentVersion,
+            timestamp: now
+        }));
+
         setTimeout(function() {
             modal.hide();
         }, 5000);
@@ -1209,19 +1088,4 @@ document.getElementById('checkCliverButton').addEventListener('click', function 
 
     document.addEventListener('DOMContentLoaded', checkSingboxVersion);
 </script>
-<div class="container-fluid mt-4">
-                </tbody>
-            </table>
-        </div>
-      <footer class="text-center">
-    <p><?php echo $footer ?></p>
-</footer>
-    </div>
-</body>
-
-
-
-
-
-
-
+<footer class="text-center"><p><?php echo $footer ?></p></footer>

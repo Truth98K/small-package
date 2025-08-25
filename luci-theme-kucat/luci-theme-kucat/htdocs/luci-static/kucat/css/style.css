@@ -1644,6 +1644,7 @@ table>tbody>tr:first-child>td,table>tfoot>tr:first-child>td,table>thead>tr:first
 }
 
 .cbi-tab-descr {
+  line-height: 1.3;
   padding: 0 0 0.5rem 1.5rem
 }
 
@@ -1903,7 +1904,7 @@ button:hover,.btn:hover,.cbi-button:hover {
   height: 0;
   opacity: 0;
   margin: 0;
-  padding: 0rem 0rem !important
+  padding: 0 !important
 }
 
 [data-tab-active="true"] {
@@ -1945,7 +1946,8 @@ button:hover,.btn:hover,.cbi-button:hover {
 .cbi-value {
   display: inline-block;
   width: 100%;
-  line-height: 2.4rem
+  padding: 0 0.3rem;
+  line-height: 2.3rem
 }
 
 .cbi-value .cbi-filebrowser {
@@ -2382,6 +2384,7 @@ button:hover,.btn:hover,.cbi-button:hover {
   cursor: pointer;
 }
 
+
 .cbi-dropdown>ul>li[display],.cbi-dropdown[open]>ul.preview,.cbi-dropdown[open]>ul.dropdown>li,.cbi-dropdown[multiple]>ul>li>label,.cbi-dropdown[multiple][open]>ul.dropdown>li,.cbi-dropdown[multiple][more]>.more,.cbi-dropdown[multiple][empty]>.more {
   display: flex;
   align-items: center;
@@ -2518,7 +2521,7 @@ select,input {
   margin: 5em auto;
   padding: 1rem;
   border-radius: var(--radius2) !important;
-  background-color: rgba(var(--primary-rgbbody),1);
+  background-color: rgba(var(--primary-rgbbody),1)!important;
   box-shadow: 0 2px 10px 0px rgba(255,255,255,.16),0 0 10px 0 rgba(255,255,255,.12)
 }
 
@@ -2698,7 +2701,9 @@ body.modal-overlay-active #modal_overlay {
   width: 32px;
   color: var(--body-color);
   content: "";
-  background: url(../../resources/icons/loading.svg) no-repeat center;
+  
+  background: url(../../resources/icons/loading.svg) no-repeat center,
+              url(../../resources/icons/loading.gif) no-repeat center;
   background-size: 20px;
   text-align: center;
   -webkit-box-align: center;
@@ -2802,6 +2807,11 @@ td>.ifacebadge,.td>.ifacebadge {
   box-shadow: none;
   height: 20px !important;
   background-color: rgba(255,255,255,0)
+}
+.nft-rules tr > td, .nft-rules tr > th {
+  padding: .25em !important;
+  padding: 0 0.3rem!important;
+  text-align: left!important;
 }
 
 .cbi-section em {
@@ -3283,8 +3293,7 @@ body.lang_pl.node-main-login .cbi-value-title {
     -ms-user-select: none;
     user-select: none;
     font-weight: bolder;
-    overflow-x: hidden;
-    overflow-y: hidden;
+    overflow: visible;
 }
 
 .node-main-login>.main>.main-right #maincontent .container .alert-message>h4,
@@ -3482,14 +3491,12 @@ body.lang_pl.node-main-login .cbi-value-title {
 }
 
 .node-main-login footer {
-    position: absolute;
-    bottom: 0;
+    display: none;
     margin-bottom: 3rem;
     color: #eee;
-    text-align: center;
     text-shadow: 0 0 2px #222;
     font-size: var(--font-x);
-    background-color: rgba(255,255,255,0);
+  background-color: rgba(255,255,255,0)
 }
 
 
@@ -4109,28 +4116,146 @@ border: 0px solid rgba(255,255,255,0.3) !important;
   background-color: rgba(255,255,255,0.1) !important;
   border-right: 1px solid #777 !important
 }
-#cbi-nikki  .cbi-value-field,
-#cbi-nikki .cbi-section-table-row>.cbi-value-field .cbi-dropdown,
-#cbi-nikki .cbi-value-field .cbi-dropdown,
-#cbi-nikki .cbi-dynlist
+#cbi-nikki-proxy  .cbi-value-field,
+#cbi-nikki-proxy .cbi-section-table-row>.cbi-value-field .cbi-dropdown,
+#cbi-nikki-proxy .cbi-value-field .cbi-dropdown,
+#cbi-nikki-proxy .cbi-dynlist
 {
   min-width: 12.5rem;
   max-width: 16.5rem;
   width: auto;
 }
-#cbi-nikki .cbi-dynlist>.add-item {
+#cbi-nikki-proxy .cbi-dynlist>.add-item {
   min-width: 10rem;
   width: auto;
 }
-#cbi-nikki .cbi-dynlist>.add-item:not([ondrop])>input, 
-#cbi-nikki .cbi-dynlist>.add-item input, 
-#cbi-nikki .cbi-dynlist>.item>span
+#cbi-nikki-proxy .cbi-dynlist>.add-item:not([ondrop])>input, 
+#cbi-nikki-proxy .cbi-dynlist>.add-item input, 
+#cbi-nikki-proxy .cbi-dynlist>.item>span
 {
   min-width: 10rem;
   max-width: 14rem;
     width: 10rem;
 }
-    
+
+/* bandix */
+.bandix-container {
+   padding: 5px!important; 
+   background-color: rgba(255,255,255,0) !important;
+   color: var(--primary-title-color)!important;
+}
+
+.bandix-container .bandix-badge
+{
+  color: var(--primary-title-color)!important;
+  background-color: var(--inputbg-color)!important;
+  border: 1px solid var(--input-boxcolor);
+}
+
+.bandix-container .action-button {
+  background-color: rgba(var(--primary-rgbm), 0.9);
+}
+.bandix-container .history-tooltip>div,
+.bandix-container .history-tooltip>div>span,
+.bandix-container .form-label ,
+.bandix-container .bandix-card-title,
+.bandix-container .bandix-card>div,
+.bandix-container .stats-title,
+.bandix-container .bandix-title  {
+  color: var(--primary-title-color);
+}
+
+.bandix-container .history-tooltip
+{
+  background-color: rgba(var(--primary-rgbbody),1) ;
+  color: var(--body-color) ;
+  border: 1px solid var(--input-boxcolor);
+  width: 300px;
+}
+
+.bandix-container .bandix-card ,
+.bandix-container .stats-card
+{
+  background-color: rgba(var(--primary-rgbm), 0.1);
+  background-color: rgba(0, 0, 0, 0) ;
+  border-radius: 0 ;
+  box-shadow: 0 0 0 0 rgba(0, 0, 0, 0) ;
+  margin-bottom: 0 ;
+  border: 0px solid #3333331c;
+  border-bottom: 1px solid var(--input-boxcolor);
+  overflow: auto;
+}
+
+.bandix-container .bandix-card .bandix-card-header.history-header
+{
+  border-bottom: 1px solid var(--input-boxcolor);
+  background-color: rgba(0, 0, 0, 0) ;
+  padding: 0;
+}
+
+.modal-header,
+.device-summary,
+.bandix-container .bandix-card .history-controls
+{
+
+  border: 0px solid var(--input-boxcolor)!important;
+  border-bottom: 1px solid var(--input-boxcolor)!important;
+  background-color: rgba(255, 255, 255, 0)!important;
+  border-radius: 0!important;
+}
+
+.form-label,
+.modal-title,
+.device-summary>div,
+.bandix-container .device-name,
+.bandix-container .legend-item,
+.stats-card>div>div>span,
+.bandix-container .bandix-container .stats-card>div>div>span  {
+  color: var(--primary-title-color)!important;
+}
+.bandix-container .bandix-table
+{
+  table-layout: auto;
+}
+
+.bandix-container .bandix-table td ,.bandix-table th
+{
+padding: 10px 15px;
+}
+
+.form-input
+ {
+  background-color: var(--inputbg-color)!important;
+  color: var(--body-color) !important;
+  padding: 0 20px 0 10px!important;
+}
+
+.form-select
+{
+  background-color: var(--inputbg-color)!important;
+  color: var(--body-color) !important;
+  padding: 0 20px 0 10px!important;
+}
+
+.bandix-table>tbody>tr>td, .bandix-table>tbody>tr>th,
+.bandix-table>thead>tr>td, .bandix-table>thead>tr>th
+{
+
+  background-color: rgba(255, 255, 255, 0) !important;
+  color: var(--body-color) !important;
+}
+
+.bandix-table tbody tr:nth-child(odd) 
+{
+  background-color: rgba(0,0,0,0.1) !important;
+}
+
+.bandix-table tbody tr:nth-child(even)
+{
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+
+
 [data-page="admin-services-adguardhome"]>.main .cbi-value .cbi-input-textarea {
   width: 100% !important;
   box-shadow: 0 0 1px var(--input-boxcolor) !important
@@ -4187,6 +4312,7 @@ select,input,.cbi-dropdown,.btn,button,.cbi-button,.item::after {
 }
 
 #cbi-appfilter>div>div {
+  overflow: auto;
   background-color: rgba(var(--primary-rgbbody),1) !important
 }
 
@@ -4216,6 +4342,7 @@ select,input,.cbi-dropdown,.btn,button,.cbi-button,.item::after {
 }
 
 #cbi-appfilter #detailsModal .tab-body {
+  overflow: auto;
   background-color: rgba(248,248,248,0.9) !important
 }
 
@@ -4596,18 +4723,16 @@ div#file-manager-container #status-bar #status-info {
     text-align: center
   }
 
-  .td.cbi-section-actions {
-    vertical-align: bottom
-  }
-
   .tr[data-title]::before,.tr.cbi-section-table-titles.named::before {
     flex: 1 1 100%
   }
 
-  .td[data-title],[data-page^="admin-status-realtime"] .td[id] {
+  [data-page^="admin-status-realtime"] .td[id] {
     text-align: left
   }
-
+  .cbi-tab-descr {
+    padding: 0 0.3rem;
+  }
   .td.cbi-section-actions>*>*,.td.cbi-section-actions>*>form>* {
     margin: 0 2px
   }
@@ -4774,11 +4899,15 @@ div#file-manager-container #status-bar #status-info {
     width: 100%;
   }
   
-.cbi-dropdown[open]>ul.dropdown {
+  .cbi-dropdown[open]>ul.dropdown {
   overflow: auto;
   max-width: 100%;
   margin: auto;
+  max-height: 8rem !important;
   padding: 0 !important;
+  }
+  table>tbody>tr>td, table>tfoot>tr>td, table>thead>tr>td {
+    padding: 0;
   }
 
   .cbi-input-textarea,textarea {
@@ -4797,6 +4926,7 @@ div#file-manager-container #status-bar #status-info {
   }
   .cbi-value-title,.cbi-value-field {
     display: inline-block;
+    padding: 0 0.3rem;
     text-align: left
   }
 
@@ -4825,12 +4955,18 @@ div#file-manager-container #status-bar #status-info {
   }
 
   [data-page="admin-network-dhcp"] [data-tab-active="true"] {
-    padding: 1rem 1rem !important
+    padding: 0 !important
   }
 
 
   #file-manager-container .file-manager-header {
     flex-wrap: wrap
+  }
+}
+
+@media (max-width: 600px) {
+  .app-item {
+    width: 50%!important
   }
 }
 

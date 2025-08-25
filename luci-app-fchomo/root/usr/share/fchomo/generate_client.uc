@@ -51,6 +51,7 @@ const port_presets = {
       	common_udpport: uci.get(uciconf, ucifchm, 'common_udpport') || '20-21,22,53,80,110,143,443,853,993,995,8080,8443,9418',
       	stun_port: uci.get(uciconf, ucifchm, 'stun_port') || '3478,19302',
       	turn_port: uci.get(uciconf, ucifchm, 'turn_port') || '5349',
+		google_fcm_port: uci.get(uciconf, ucifchm, 'google_fcm_port') || '443,5228-5230',
       	steam_client_port: uci.get(uciconf, ucifchm, 'steam_client_port') || '27015-27050',
       	steam_p2p_udpport: uci.get(uciconf, ucifchm, 'steam_p2p_udpport') || '3478,4379,4380,27000-27100',
       },
@@ -312,7 +313,7 @@ uci.foreach(uciconf, ucisniff, (cfg) => {
 		return null;
 
 	config.sniffer.sniff[cfg.protocol] = {
-		ports: map(cfg.ports, ports => strToInt(ports) || null), // DEBUG ERROR data type *utils.IntRanges[uint16]
+		ports: map(cfg.ports, ports => strToInt(ports) || null), // @DEBUG ERROR data type *utils.IntRanges[uint16]
 		"override-destination": (cfg.override_destination === '0') ? false : true
 	};
 });
@@ -351,7 +352,7 @@ push(config.listeners, {
 	listen: '::',
 	network: ['tcp', 'udp'],
 	target: '1.1.1.1:53'
-}); // Not required for v1.19.2+
+}); // @Not required for v1.19.2+
 /* Tun settings */
 if (match(proxy_mode, /tun/))
 	push(config.listeners, {
@@ -764,7 +765,7 @@ uci.foreach(uciconf, ucirule, (cfg) => {
 /* Routing rules START */
 /* Routing rules */
 config.rules = [
-	"IN-NAME,dns-in,dns-out", // Not required for v1.19.2+
+	"IN-NAME,dns-in,dns-out", // @Not required for v1.19.2+
 	"DST-PORT,53,dns-out"
 ];
 uci.foreach(uciconf, ucirout, (cfg) => {

@@ -191,12 +191,13 @@ const proxy_group_type = [
 
 const routing_port_type = [
 	['all', _('All ports')],
-	['common_tcpport', _('Common ports (bypass P2P traffic)'), uci.get('fchomo', 'routing', 'common_tcpport') || '20-21,22,53,80,110,143,443,465,853,873,993,995,5222,8080,8443,9418'],
-	['common_udpport', _('Common ports (bypass P2P traffic)'), uci.get('fchomo', 'routing', 'common_udpport') || '20-21,22,53,80,110,143,443,853,993,995,8080,8443,9418'],
-	['stun_port', _('STUN ports'), uci.get('fchomo', 'routing', 'stun_port') || '3478,19302'],
-	['turn_port', _('TURN ports'), uci.get('fchomo', 'routing', 'turn_port') || '5349'],
-	['steam_client_port', _('Steam Client ports'), uci.get('fchomo', 'routing', 'steam_client_port') || '27015-27050'],
-	['steam_p2p_udpport', _('Steam P2P ports'), uci.get('fchomo', 'routing', 'steam_p2p_udpport') || '3478,4379,4380,27000-27100'],
+	['common_tcpport', _('Common ports (bypass P2P traffic)'), uci.get('fchomo', 'config', 'common_tcpport') || '20-21,22,53,80,110,143,443,465,853,873,993,995,5222,8080,8443,9418'],
+	['common_udpport', _('Common ports (bypass P2P traffic)'), uci.get('fchomo', 'config', 'common_udpport') || '20-21,22,53,80,110,143,443,853,993,995,8080,8443,9418'],
+	['stun_port', _('STUN ports'), uci.get('fchomo', 'config', 'stun_port') || '3478,19302'],
+	['turn_port', _('TURN ports'), uci.get('fchomo', 'config', 'turn_port') || '5349'],
+	['google_fcm_port', _('Google FCM ports'), uci.get('fchomo', 'config', 'google_fcm_port') || '443,5228-5230'],
+	['steam_client_port', _('Steam Client ports'), uci.get('fchomo', 'config', 'steam_client_port') || '27015-27050'],
+	['steam_p2p_udpport', _('Steam P2P ports'), uci.get('fchomo', 'config', 'steam_p2p_udpport') || '3478,4379,4380,27000-27100'],
 ];
 
 const rules_type = [
@@ -389,7 +390,7 @@ const CBIListValue = form.ListValue.extend({
 const CBIRichMultiValue = form.MultiValue.extend({
 	__name__: 'CBI.RichMultiValue',
 
-	value: (form.RichListValue || form.MultiValue).prototype.value // less_24_10
+	value: (form.RichListValue || form.MultiValue).prototype.value // @less_24_10
 });
 
 const CBIStaticList = form.DynamicList.extend({
@@ -607,7 +608,7 @@ function bool2str(value) {
 	return value ? '1' : '0';
 }
 
-// thanks to homeproxy
+/* thanks to homeproxy */
 function calcStringMD5(e) {
 	/* Thanks to https://stackoverflow.com/a/41602636 */
 	let h = (a, b) => {
@@ -682,7 +683,7 @@ function calcStringMD5(e) {
 	return (p(a) + p(b) + p(c) + p(d)).toLowerCase();
 }
 
-// thanks to homeproxy
+/* thanks to homeproxy */
 function decodeBase64Str(str) {
 	if (!str)
 		return null;
@@ -814,7 +815,7 @@ function getClashAPI(instance) {
 	return L.resolveDefault(callGetClashAPI(instance), {});
 }
 
-// thanks to homeproxy
+/* thanks to homeproxy */
 function loadDefaultLabel(section_id) {
 	const label = uci.get(this.config, section_id, 'label');
 	if (label) {
@@ -825,7 +826,7 @@ function loadDefaultLabel(section_id) {
 	}
 }
 
-// thanks to homeproxy
+/* thanks to homeproxy */
 function loadModalTitle(title, addtitle, section_id) {
 	const label = uci.get(this.config, section_id, 'label');
 	return label ? title + ' » ' + label : addtitle;
@@ -1126,7 +1127,7 @@ function validateAuthPassword(section_id, value) {
 }
 
 function validateCommonPort(section_id, value) {
-	// thanks to homeproxy
+	/* thanks to homeproxy */
 	let stubValidator = {
 		factory: validation,
 		apply(type, value, args) {
@@ -1347,7 +1348,7 @@ function removeFile(type, filename) {
 	});
 }
 
-// thanks to homeproxy
+/* thanks to homeproxy */
 function uploadCertificate(type, filename, ev) {
 	const callWriteCertificate = rpc.declare({
 		object: 'luci.fchomo',

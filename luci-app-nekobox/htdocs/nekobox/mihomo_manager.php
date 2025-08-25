@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (file_exists($fileToDelete) && unlink($fileToDelete)) {
             echo '<div class="log-message alert alert-success" role="alert" data-translate="file_delete_success" data-dynamic-content="' . htmlspecialchars(basename($_POST['deleteFile'])) . '"></div>';
         } else {
-            echo '<div class="log-message alert alert-danger" role="alert" data-translate="file_delete_failed"></div>';
+            //echo '<div class="log-message alert alert-danger" role="alert" data-translate="file_delete_failed"></div>';
         }
     }
 
@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (file_exists($fileToDelete) && unlink($fileToDelete)) {
             echo '<div class="log-message alert alert-success" role="alert" data-translate="config_delete_success" data-dynamic-content="' . htmlspecialchars(basename($_POST['deleteConfigFile'])) . '"></div>';
         } else {
-            echo '<div class="log-message alert alert-danger" role="alert" data-translate="config_delete_failed"></div>';
+           // echo '<div class="log-message alert alert-danger" role="alert" data-translate="config_delete_failed"></div>';
         }
     }
 
@@ -368,9 +368,9 @@ EOL;
 
         if (file_put_contents($shellScriptPath, $shellScriptContent) !== false) {
             chmod($shellScriptPath, 0755); 
-            echo "<div class='log-message alert alert-success' data-translate='shell_script_created' data-dynamic-content='$shellScriptPath'></div>";
+            echo "<div class='log-message alert alert-success'><span data-translate='shell_script_created' data-dynamic-content='$shellScriptPath'></span></div>";
         } else {
-            echo "<div class='log-message alert alert-danger' data-translate='shell_script_failed'></div>";
+            echo "<div class='log-message alert alert-danger'><span data-translate='shell_script_failed'></span></div>";
         }
     }
 }
@@ -472,25 +472,6 @@ function download_file($url, $destination) {
     background-color: #d4edda !important;
     border-color: #c3e6cb !important;
     color: #155724 !important;
-}
-
-.icon-btn-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    justify-content: flex-start;
-}
-.icon-btn {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 2rem !important;
-    height: 2rem !important;
-    padding: 0 !important;
-    border-radius: 1rem !important;
-    font-size: 1rem !important;
-    line-height: 1 !important;
-    flex-shrink: 0;
 }
 
 #updateNotification {
@@ -605,61 +586,100 @@ $(document).ready(function() {
 });
 </script>
 <div class="container-sm container-bg mt-4">
-    <div class="row">
-        <a href="./index.php" class="col btn btn-lg text-nowrap"><i class="bi bi-house-door"></i> <span data-translate="home">Home</span></a>
-        <a href="./mihomo_manager.php" class="col btn btn-lg text-nowrap"><i class="bi bi-folder"></i> <span data-translate="manager">Manager</span></a>
-        <a href="./singbox.php" class="col btn btn-lg text-nowrap"><i class="bi bi-shop"></i> <span data-translate="template_i">Template I</span></a>
-        <a href="./subscription.php" class="col btn btn-lg text-nowrap"><i class="bi bi-bank"></i> <span data-translate="template_ii">Template II</span></a>
-        <a href="./mihomo.php" class="col btn btn-lg text-nowrap"><i class="bi bi-building"></i> <span data-translate="template_iii">Template III</span></a>
-    </div>
-
-<h2 class="container-fluid text-center mt-4 mb-4" data-translate="subscriptionManagement"></h2>
-<div class="container-fluid text-center px-md-3">
-<?php if (isset($message) && $message): ?>
-    <div class="alert alert-info">
-        <?php echo nl2br(htmlspecialchars($message)); ?>
-    </div>
-<?php endif; ?>
-<?php if (isset($subscriptions) && is_array($subscriptions)): ?>
-    <div class="container-fluid px-4">
-        <?php 
-        $maxSubscriptions = 6;
-        for ($i = 0; $i < $maxSubscriptions; $i++):
-            $displayIndex = $i + 1;
-            $url = $subscriptions[$i]['url'] ?? '';
-            $fileName = $subscriptions[$i]['file_name'] ?? "subscription_" . $displayIndex . ".yaml";
-            
-            if ($i % 3 == 0) echo '<div class="row">';
-        ?>
-            <div class="col-md-4 mb-3 px-1">
-                <form method="post" class="card shadow-sm">
-                    <div class="card-body">
-                        <div class="form-group">
-                            <h5 class="mb-2" data-translate="subscriptionLink"><?php echo $displayIndex; ?></h5>
-                            <input type="text" name="subscription_url" id="subscription_url_<?php echo $displayIndex; ?>" value="<?php echo htmlspecialchars($url); ?>" class="form-control" data-translate-placeholder="enterSubscriptionUrl">
-                        </div>
-                        <div class="form-group">
-                            <label for="custom_file_name_<?php echo $displayIndex; ?>" data-translate="customFileName"></label>
-                            <input type="text" name="custom_file_name" id="custom_file_name_<?php echo $displayIndex; ?>" value="<?php echo htmlspecialchars($fileName); ?>" class="form-control">
-                        </div>
-                        <input type="hidden" name="index" value="<?php echo $i; ?>">
-                        <div class="text-center mt-3">
-                            <button type="submit" name="update" class="btn btn-info btn-block">
-                                <i class="bi bi-arrow-repeat"></i> <span data-translate="updateSubscription">Settings</span> <?php echo $displayIndex; ?>
-                            </button>
-                        </div>
-                    </div>
-                </form>
+<nav class="navbar navbar-expand-lg sticky-top">
+    <div class="container-sm container">
+        <a class="navbar-brand d-flex align-items-center" href="#">
+            <?= $iconHtml ?>
+            <span style="color: var(--accent-color); letter-spacing: 1px;"><?= htmlspecialchars($title) ?></span>
+        </a>
+        <button class="navbar-toggler" type="button" style="position: relative; z-index: 1;" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+            <i class="bi bi-list" style="color: var(--accent-color); font-size: 1.8rem;"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="font-size: 18px;">
+                <li class="nav-item">
+                    <a class="nav-link <?= $current == 'index.php' ? 'active' : '' ?>" href="./index.php"><i class="bi bi-house-door"></i> <span data-translate="home">Home</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= $current == 'mihomo_manager.php' ? 'active' : '' ?>" href="./mihomo_manager.php"><i class="bi bi-folder"></i> <span data-translate="manager">Manager</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= $current == 'singbox.php' ? 'active' : '' ?>" href="./singbox.php"><i class="bi bi-shop"></i> <span data-translate="template_i">Template I</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= $current == 'subscription.php' ? 'active' : '' ?>" href="./subscription.php"><i class="bi bi-bank"></i> <span data-translate="template_ii">Template II</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= $current == 'mihomo.php' ? 'active' : '' ?>" href="./mihomo.php"><i class="bi bi-building"></i> <span data-translate="template_iii">Template III</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= $current == 'monaco.php' ? 'active' : '' ?>" href="./monaco.php"><i class="bi bi-bank"></i> <span data-translate="pageTitle">File Assistant</span></a>
+                </li>
+            </ul>
+            <div class="d-flex align-items-center">
+                <div class="me-3 d-block">
+                    <button type="button" class="btn btn-primary icon-btn me-2" onclick="toggleControlPanel()" data-tooltip="control_panel"><i class="bi bi-gear"> </i></button>
+                    <button type="button" class="btn btn-danger icon-btn me-2" data-bs-toggle="modal" data-bs-target="#langModal" data-tooltip="set_language"><i class="bi bi-translate"></i></button>
+                    <button type="button" class="btn btn-success icon-btn me-2" data-bs-toggle="modal" data-bs-target="#musicModal" data-tooltip="music_player"><i class="bi bi-music-note-beamed"></i></button>
+                    <button type="button" id="toggleIpStatusBtn" class="btn btn-warning icon-btn me-2" onclick="toggleIpStatusBar()" data-tooltip="hide_ip_info"><i class="bi bi-eye-slash"> </i></button>
+                    <button type="button" class="btn btn-pink icon-btn me-2" data-bs-toggle="modal" data-bs-target="#portModal" data-tooltip="viewPortInfoButton"><i class="bi bi-plug"></i></button>
+                    <button type="button" class="btn-refresh-page btn btn-orange icon-btn me-2 d-none d-sm-inline"><i class="fas fa-sync-alt"></i></button>
+                    <button type="button" class="btn btn-info icon-btn me-2" onclick="document.getElementById('colorPicker').click()" data-tooltip="component_bg_color"><i class="bi bi-palette"></i></button>
+                    <input type="color" id="colorPicker" value="#0f3460" style="display: none;">
             </div>
-        <?php 
-            if ($i % 3 == 2 || $i == $maxSubscriptions - 1) echo '</div>';
-        endfor;
-        ?>
+        </div>
     </div>
-<?php else: ?>
-<?php endif; ?>
+</nav>
+<h2 class="container-fluid text-center mt-4 mb-4" data-translate="subscriptionManagement"></h2>
+<div class="container-sm text-center px-2 px-md-3">
+    <?php if (isset($message) && $message): ?>
+        <div class="alert alert-info">
+            <?php echo nl2br(htmlspecialchars($message)); ?>
+        </div>
+    <?php endif; ?>
+    <?php if (isset($subscriptions) && is_array($subscriptions)): ?>
+        <div class="container-fluid px-3">
+            <?php 
+            $maxSubscriptions = 6;
+            for ($i = 0; $i < $maxSubscriptions; $i++):
+                $displayIndex = $i + 1;
+                $url = $subscriptions[$i]['url'] ?? '';
+                $fileName = $subscriptions[$i]['file_name'] ?? "subscription_" . $displayIndex . ".yaml";
+                
+                if ($i % 3 == 0) echo '<div class="row">';
+            ?>
+                <div class="col-md-4 mb-3 px-1">
+                    <div class="card">
+                        <form method="post">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <h5 class="mb-2" data-translate="subscriptionLink"><?php echo $displayIndex; ?></h5>
+                                    <input type="text" name="subscription_url" id="subscription_url_<?php echo $displayIndex; ?>" value="<?php echo htmlspecialchars($url); ?>" class="form-control" data-translate-placeholder="enterSubscriptionUrl">
+                                </div>
+                                <div class="form-group">
+                                    <label for="custom_file_name_<?php echo $displayIndex; ?>" data-translate="customFileName"></label>
+                                    <input type="text" name="custom_file_name" id="custom_file_name_<?php echo $displayIndex; ?>" value="<?php echo htmlspecialchars($fileName); ?>" class="form-control">
+                                </div>
+                                <input type="hidden" name="index" value="<?php echo $i; ?>">
+                                <div class="text-center mt-3">
+                                    <button type="submit" name="update" class="btn btn-info btn-block">
+                                        <i class="bi bi-arrow-repeat"></i> <span data-translate="updateSubscription">Settings</span> <?php echo $displayIndex; ?>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            <?php 
+                if ($i % 3 == 2 || $i == $maxSubscriptions - 1) echo '</div>';
+            endfor;
+            ?>
+        </div>
+    <?php else: ?>
+    <?php endif; ?>
+</div>
 
-<div class="text-center mt-1 mb-1">
+<div class="text-center mt-4 mb-1">
     <form method="post">
         <button type="button" class="btn btn-primary mx-1 mb-2" data-bs-toggle="modal" data-bs-target="#cronModal">
             <i class="bi bi-clock"></i> <span data-translate="set_cron_job"></span>
@@ -677,7 +697,7 @@ $(document).ready(function() {
 
 <h2 class="text-center mt-4 mb-3" data-translate="fileManagement">File Management</h2>
 
-<div class="container-fluid px-2 px-md-3">
+<div class="container-sm px-3 px-md-4">
   <div class="row g-3">
     <?php
     $proxyFiles = $proxyFiles ?? [];
@@ -706,14 +726,13 @@ $(document).ready(function() {
       $modified = file_exists($filePath) ? date('Y-m-d H:i:s', filemtime($filePath)) : '-';
     ?>
     <div class="col-12 col-md-6 col-lg-3">
-      <div class="card shadow-sm h-100 text-start">
+      <div class="card h-100 text-start">
         <div class="card-body d-flex flex-column justify-content-between">
-          <h5 class="card-title mb-2" data-translate-title="fileName"><?= htmlspecialchars($file) ?></h5>
+          <h5 class="card-title mb-2" data-tooltip="fileName"><?= htmlspecialchars($file) ?></h5>
           <p class="card-text mb-1"><strong data-translate="fileSize">Size</strong>: <?= $size ?></p>
           <p class="card-text mb-1"><strong data-translate="lastModified">Last Modified</strong>: <?= $modified ?></p>
           <p class="card-text mb-2"><strong data-translate="fileType">Type</strong>: <span class="badge <?= $isProxy ? 'bg-primary' : 'bg-success' ?>"><?= htmlspecialchars($fileTypes[$index]) ?></span></p>
           <?php
-
           $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
           $flowLeft = '';
@@ -796,28 +815,28 @@ $(document).ready(function() {
             <?php if ($isProxy): ?>
               <form method="post" class="d-inline m-0 p-0">
                 <input type="hidden" name="deleteFile" value="<?= htmlspecialchars($file) ?>">
-                <button type="submit" class="btn btn-danger icon-btn" onclick="return confirmDelete()" data-translate-title="delete"><i class="bi bi-trash"></i></button>
+                <button type="submit" class="btn btn-danger icon-btn" onclick="return confirmDelete('<?= htmlspecialchars($file) ?>', event)" data-tooltip="delete"><i class="bi bi-trash"></i></button>
               </form>
-              <button type="button" class="btn btn-success icon-btn" data-bs-toggle="modal" data-bs-target="#renameModal" data-filename="<?= htmlspecialchars($file) ?>" data-filetype="proxy" data-translate-title="rename"><i class="bi bi-pencil"></i></button>
-              <button type="button" class="btn btn-warning icon-btn" onclick="openEditModal('<?= htmlspecialchars($file) ?>','proxy')" data-translate-title="edit"><i class="bi bi-pen"></i></button>
-              <button type="button" class="btn btn-info icon-btn" onclick="openUploadModal('proxy')" data-translate-title="upload"><i class="bi bi-upload"></i></button>
-              <form method="get" class="d-inline m-0 p-0">
+              <button type="button" class="btn btn-success icon-btn" data-bs-toggle="modal" data-bs-target="#renameModal" data-filename="<?= htmlspecialchars($file) ?>" data-filetype="proxy" data-tooltip="rename"><i class="bi bi-pencil"></i></button>
+              <button type="button" class="btn btn-warning icon-btn" onclick="openEditModal('<?= htmlspecialchars($file) ?>','proxy')" data-tooltip="edit"><i class="bi bi-pen"></i></button>
+              <button type="button" class="btn btn-info icon-btn" onclick="openUploadModal('proxy')" data-tooltip="upload"><i class="bi bi-upload"></i></button>
+              <form method="get" class="d-inline m-0 p-0 no-loader">
                 <input type="hidden" name="downloadFile" value="<?= htmlspecialchars($file) ?>">
                 <input type="hidden" name="fileType" value="proxy">
-                <button type="submit" class="btn btn-primary icon-btn" data-translate-title="download"><i class="bi bi-download"></i></button>
+                <button type="submit" class="btn btn-primary icon-btn" data-tooltip="download"><i class="bi bi-download"></i></button>
               </form>
             <?php else: ?>
               <form method="post" class="d-inline m-0 p-0">
                 <input type="hidden" name="deleteConfigFile" value="<?= htmlspecialchars($file) ?>">
-                <button type="submit" class="btn btn-danger icon-btn" onclick="return confirmDelete()" data-translate-title="delete"><i class="bi bi-trash"></i></button>
+                <button type="submit" class="btn btn-danger icon-btn" onclick="return confirmDelete('<?= htmlspecialchars($file) ?>', event)" data-tooltip="delete"><i class="bi bi-trash"></i></button>
               </form>
-              <button type="button" class="btn btn-success icon-btn" data-bs-toggle="modal" data-bs-target="#renameModal" data-filename="<?= htmlspecialchars($file) ?>" data-filetype="config" data-translate-title="rename"><i class="bi bi-pencil"></i></button>
-              <button type="button" class="btn btn-warning icon-btn" onclick="openEditModal('<?= htmlspecialchars($file) ?>','config')" data-translate-title="edit"><i class="bi bi-pen"></i></button>
-              <button type="button" class="btn btn-info icon-btn" onclick="openUploadModal('config')" data-translate-title="upload"><i class="bi bi-upload"></i></button>
-              <form method="get" class="d-inline m-0 p-0">
+              <button type="button" class="btn btn-success icon-btn" data-bs-toggle="modal" data-bs-target="#renameModal" data-filename="<?= htmlspecialchars($file) ?>" data-filetype="config" data-tooltip="rename"><i class="bi bi-pencil"></i></button>
+              <button type="button" class="btn btn-warning icon-btn" onclick="openEditModal('<?= htmlspecialchars($file) ?>','config')" data-tooltip="edit"><i class="bi bi-pen"></i></button>
+              <button type="button" class="btn btn-info icon-btn" onclick="openUploadModal('config')" data-tooltip="upload"><i class="bi bi-upload"></i></button>
+              <form method="get" class="d-inline m-0 p-0 no-loader">
                 <input type="hidden" name="downloadFile" value="<?= htmlspecialchars($file) ?>">
                 <input type="hidden" name="fileType" value="config">
-                <button type="submit" class="btn btn-primary icon-btn" data-translate-title="download"><i class="bi bi-download"></i></button>
+                <button type="submit" class="btn btn-primary icon-btn" data-tooltip="download"><i class="bi bi-download"></i></button>
               </form>
             <?php endif; ?>
           </div>
@@ -1030,292 +1049,393 @@ checkAceScript();
 
 <script>
 let isJsonDetected = false;
-
 let aceEditorInstance;
 
 function initializeAceEditor() {
     aceEditorInstance = ace.edit("aceEditorContainer");
     const savedTheme = localStorage.getItem("editorTheme") || "ace/theme/vibrant_ink";
     aceEditorInstance.setTheme(savedTheme);
-    aceEditorInstance.session.setMode("ace/mode/javascript"); 
+    aceEditorInstance.session.setMode("ace/mode/javascript");
     aceEditorInstance.setOptions({
         fontSize: "20px",
         wrap: true
     });
 
     document.getElementById("editorTheme").value = savedTheme;
+
     aceEditorInstance.getSession().on('change', () => {
         updateEditorStatus();
         detectContentFormat();
     });
+
     aceEditorInstance.selection.on('changeCursor', updateEditorStatus);
-    detectContentFormat(); 
+    detectContentFormat();
+}
+
+function openFullScreenEditor() {
+    aceEditorInstance.setValue(document.getElementById('fileContent').value, -1);
+    $('#fullScreenEditorModal').modal('show');
+    updateEditorStatus();
+}
+
+function saveFullScreenContent() {
+    document.getElementById('fileContent').value = aceEditorInstance.getValue();
+    $('#fullScreenEditorModal').modal('hide');
+    $('#editModal').modal('hide');
+    document.getElementById('editForm').submit();
+}
+
+function closeFullScreenEditor() {
+    $('#fullScreenEditorModal').modal('hide');
+}
+
+function changeFontSize() {
+    const fontSize = document.getElementById("fontSize").value;
+    aceEditorInstance.setFontSize(fontSize);
+}
+
+function changeEditorTheme() {
+    const theme = document.getElementById("editorTheme").value;
+    aceEditorInstance.setTheme(theme);
+    localStorage.setItem("editorTheme", theme);
+}
+
+function openSearch() {
+    if (!aceEditorInstance) {
+        console.error("Ace Editor instance not initialized.");
+        return;
     }
 
-    function openFullScreenEditor() {
-        aceEditorInstance.setValue(document.getElementById('fileContent').value, -1); 
-        $('#fullScreenEditorModal').modal('show'); 
-        updateEditorStatus(); 
-    }
+    aceEditorInstance.execCommand("find");
 
-    function saveFullScreenContent() {
-        document.getElementById('fileContent').value = aceEditorInstance.getValue();
-        $('#fullScreenEditorModal').modal('hide'); 
-        $('#editModal').modal('hide'); 
-        document.getElementById('editForm').submit(); 
-    }
+    setTimeout(() => {
+        const searchBox = document.querySelector(".ace_search");
+        if (!searchBox) return;
 
-    function closeFullScreenEditor() {
-        $('#fullScreenEditorModal').modal('hide');
-    }
+        const searchInput = searchBox.querySelector(".ace_search_form .ace_search_field");
+        if (searchInput) {
+            searchInput.placeholder = translations['search_placeholder'] || 'Search...';
+        }
 
-    function changeFontSize() {
-        const fontSize = document.getElementById("fontSize").value;
-        aceEditorInstance.setFontSize(fontSize);
-    }
+        const replaceInput = searchBox.querySelector(".ace_replace_form .ace_search_field");
+        if (replaceInput) {
+            replaceInput.placeholder = translations['replace_placeholder'] || 'Replace with...';
+        }
 
-    function changeEditorTheme() {
-        const theme = document.getElementById("editorTheme").value;
-        aceEditorInstance.setTheme(theme);
-        localStorage.setItem("editorTheme", theme); 
-    }
+        const buttons = searchBox.querySelectorAll(".ace_searchbtn");
+        buttons.forEach(button => {
+            const action = button.getAttribute("action");
+            switch (action) {
+                case "findPrev":
+                    button.textContent = "";
+                    button.onclick = () => {
+                        aceEditorInstance.execCommand("findprevious");
+                        aceEditorInstance.scrollToLine(
+                            aceEditorInstance.getCursorPosition().row,
+                            true,
+                            true
+                        );
+                    };
+                    break;
+                case "findNext":
+                    button.textContent = "";
+                    button.onclick = () => {
+                        aceEditorInstance.execCommand("findnext");
+                        aceEditorInstance.scrollToLine(
+                            aceEditorInstance.getCursorPosition().row,
+                            true,
+                            true
+                        );
+                    };
+                    break;
+                case "findAll":
+                    button.textContent = translations['find_all'] || 'All';
+                    break;
+                case "replaceAndFindNext":
+                    button.textContent = translations['replace'] || 'Replace';
+                    break;
+                case "replaceAll":
+                    button.textContent = translations['replace_all'] || 'Replace All';
+                    break;
+            }
+        });
 
-    function openSearch() {
-        aceEditorInstance.execCommand("find");
-    }
+        const optionButtons = searchBox.querySelectorAll(".ace_button");
+        optionButtons.forEach(button => {
+            const action = button.getAttribute("action");
+            switch (action) {
+                case "toggleReplace":
+                    button.title = translations['toggle_replace_mode'] || 'Toggle Replace Mode';
+                    break;
+                case "toggleRegexpMode":
+                    button.title = translations['toggle_regexp_mode'] || 'Regular Expression Search';
+                    break;
+                case "toggleCaseSensitive":
+                    button.title = translations['toggle_case_sensitive'] || 'Case-Sensitive Search';
+                    break;
+                case "toggleWholeWords":
+                    button.title = translations['toggle_whole_words'] || 'Whole Word Search';
+                    break;
+                case "searchInSelection":
+                    button.title = translations['search_in_selection'] || 'Search in Selection';
+                    break;
+            }
+        });
 
-    function isYamlFormat(content) {
-            const yamlPattern = /^(---|\w+:\s)/m;
-            return yamlPattern.test(content);
-    }
+        const counter = searchBox.querySelector(".ace_search_counter");
+        if (counter && counter.textContent.includes("of")) {
+            counter.textContent = counter.textContent.replace(
+                "of",
+                translations['search_counter_of'] || 'of'
+            );
+        }
+    }, 100);
+}
 
-    function validateJsonSyntax() {
-            const content = aceEditorInstance.getValue();
-            let annotations = [];
-        try {
-            JSON.parse(content);
-            alert(langData[currentLang]['validateJson'] + " " + langData[currentLang]['jsonSyntaxCorrect']); 
-        } catch (e) {
-            const line = e.lineNumber ? e.lineNumber - 1 : 0;
-            annotations.push({
+function isYamlFormat(content) {
+    const yamlPattern = /^(---|\w+:\s)/m;
+    return yamlPattern.test(content);
+}
+
+function validateJsonSyntax() {
+    const content = aceEditorInstance.getValue();
+    const annotations = [];
+    try {
+        JSON.parse(content);
+        alert(`${langData[currentLang]['validateJson']} ${langData[currentLang]['jsonSyntaxCorrect']}`);
+    } catch (e) {
+        const line = e.lineNumber ? e.lineNumber - 1 : 0;
+        annotations.push({
             row: line,
             column: 0,
             text: e.message,
             type: "error"
         });
         aceEditorInstance.session.setAnnotations(annotations);
-        alert(langData[currentLang]['validateJson'] + " " + langData[currentLang]['jsonSyntaxError'] + ": " + e.message); 
-        }
+        alert(
+            `${langData[currentLang]['validateJson']} ${langData[currentLang]['jsonSyntaxError']}: ${e.message}`
+        );
     }
+}
 
-    function validateYamlSyntax() {
-            const content = aceEditorInstance.getValue();
-            let annotations = [];
-        try {
-            jsyaml.load(content); 
-            alert(langData[currentLang]['validateYaml'] + " " + langData[currentLang]['yamlSyntaxCorrect']);
-        } catch (e) {
-            const line = e.mark ? e.mark.line : 0;
-            annotations.push({
+function validateYamlSyntax() {
+    const content = aceEditorInstance.getValue();
+    const annotations = [];
+    try {
+        jsyaml.load(content);
+        alert(`${langData[currentLang]['validateYaml']} ${langData[currentLang]['yamlSyntaxCorrect']}`);
+    } catch (e) {
+        const line = e.mark ? e.mark.line : 0;
+        annotations.push({
             row: line,
             column: 0,
             text: e.message,
             type: "error"
         });
         aceEditorInstance.session.setAnnotations(annotations);
-        alert(langData[currentLang]['validateYaml'] + " " + langData[currentLang]['yamlSyntaxError'] + ": " + e.message); 
-        }
+        alert(
+            `${langData[currentLang]['validateYaml']} ${langData[currentLang]['yamlSyntaxError']}: ${e.message}`
+        );
     }
+}
 
-    function formatContent() {
-        const content = aceEditorInstance.getValue();
-        const mode = aceEditorInstance.session.$modeId;
-        let formattedContent;
+function formatContent() {
+    const content = aceEditorInstance.getValue();
+    const mode = aceEditorInstance.session.$modeId;
+    let formattedContent;
 
-        try {
-            if (mode === "ace/mode/json") {
-                formattedContent = JSON.stringify(JSON.parse(content), null, 4);
-                aceEditorInstance.setValue(formattedContent, -1);
-                alert(langData[currentLang]['formatIndentation'] + " " + langData[currentLang]['jsonFormatSuccess']);
-            } else if (mode === "ace/mode/javascript") {
-                formattedContent = js_beautify(content, { indent_size: 4 });
-                aceEditorInstance.setValue(formattedContent, -1);
-                alert(langData[currentLang]['formatIndentation'] + " " + langData[currentLang]['jsFormatSuccess']); 
-            } else {
-                alert(langData[currentLang]['formatIndentation'] + " " + langData[currentLang]['unsupportedMode']);
-            }
-        } catch (e) {
-            alert(langData[currentLang]['formatIndentation'] + " " + langData[currentLang]['formatError'] + ": " + e.message); 
-        }
-    }
-
-
-    function formatYamlContent() {
-        const content = aceEditorInstance.getValue();
-        
-        try {
-            const yamlObject = jsyaml.load(content); 
-            const formattedYaml = jsyaml.dump(yamlObject, { indent: 4 }); 
-            aceEditorInstance.setValue(formattedYaml, -1);
-            alert(langData[currentLang]['yamlFormatSuccess']);
-        } catch (e) {
-            alert(langData[currentLang]['yamlSyntaxError'] + ": " + e.message);
-        }
-    }
-
-    function detectContentFormat() {
-        const content = aceEditorInstance.getValue().trim();
-
-        if (isJsonDetected) {
-            document.getElementById("jsonValidationBtn").style.display = "inline-block";
-            document.getElementById("yamlValidationBtn").style.display = "none";
-            document.getElementById("yamlFormatBtn").style.display = "none"; 
-            return;
-        }
-
-        try {
-            JSON.parse(content);
-            document.getElementById("jsonValidationBtn").style.display = "inline-block";
-            document.getElementById("yamlValidationBtn").style.display = "none";
-            document.getElementById("yamlFormatBtn").style.display = "none"; 
-            isJsonDetected = true; 
-        } catch {
-            if (isYamlFormat(content)) {
-                document.getElementById("jsonValidationBtn").style.display = "none";
-                document.getElementById("yamlValidationBtn").style.display = "inline-block";
-                document.getElementById("yamlFormatBtn").style.display = "inline-block"; 
-            } else {
-                document.getElementById("jsonValidationBtn").style.display = "none";
-                document.getElementById("yamlValidationBtn").style.display = "none";
-                document.getElementById("yamlFormatBtn").style.display = "none"; 
-            }
-        }
-    }
-
-    function openEditModal(fileName, fileType) {
-        document.getElementById('editingFileName').textContent = fileName;
-        document.getElementById('hiddenFileName').value = fileName;
-        document.getElementById('hiddenFileType').value = fileType;
-
-        fetch(`?editFile=${encodeURIComponent(fileName)}&fileType=${fileType}`)
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('fileContent').value = data; 
-                $('#editModal').modal('show');
-            })
-            .catch(error => console.error('Failed to retrieve file content:', error));
-    }
-
-    function syncEditorContent() {
-        document.getElementById('fileContent').value = document.getElementById('fileContent').value;
-    }
-
-    function updateEditorStatus() {
-        const cursor = aceEditorInstance.getCursorPosition();
-        const line = cursor.row + 1;
-        const column = cursor.column + 1;
-        const charCount = aceEditorInstance.getValue().length;
-
-        const lineColumnText = langData[currentLang]['lineColumnDisplay'].replace("{line}", line).replace("{column}", column);
-        const charCountText = langData[currentLang]['charCountDisplay'].replace("{charCount}", charCount);
-
-        document.getElementById('lineColumnDisplay').textContent = lineColumnText;
-        document.getElementById('charCountDisplay').textContent = charCountText;
-    }
-
-    $(document).ready(function() {
-        initializeAceEditor();
-    });
-
-    document.addEventListener('DOMContentLoaded', function () {
-        const renameModal = document.getElementById('renameModal');
-        renameModal.addEventListener('show.bs.modal', function (event) {
-            const button = event.relatedTarget;
-            const oldFileName = button.getAttribute('data-filename');
-            const fileType = button.getAttribute('data-filetype');
-
-            document.getElementById("oldFileName").value = oldFileName;
-            document.getElementById("fileType").value = fileType;
-            document.getElementById("newFileName").value = oldFileName;
-        });
-    });
-
-    function toggleFullscreen() {
-        const modal = document.getElementById('fullScreenEditorModal');
-    
-        if (!document.fullscreenElement) {
-            modal.requestFullscreen()
-                .then(() => {
-                    document.getElementById('toggleFullscreenBtn').textContent = 'Exit Fullscreen';
-                })
-                .catch((err) => console.error(`Error attempting to enable full-screen mode: ${err.message}`));
+    try {
+        if (mode === "ace/mode/json") {
+            formattedContent = JSON.stringify(JSON.parse(content), null, 4);
+            aceEditorInstance.setValue(formattedContent, -1);
+            alert(`${langData[currentLang]['formatIndentation']} ${langData[currentLang]['jsonFormatSuccess']}`);
+        } else if (mode === "ace/mode/javascript") {
+            formattedContent = js_beautify(content, { indent_size: 4 });
+            aceEditorInstance.setValue(formattedContent, -1);
+            alert(`${langData[currentLang]['formatIndentation']} ${langData[currentLang]['jsFormatSuccess']}`);
         } else {
-            document.exitFullscreen()
-                .then(() => {
-                    document.getElementById('toggleFullscreenBtn').textContent = 'Fullscreen';
-                })
-                .catch((err) => console.error(`Error attempting to exit full-screen mode: ${err.message}`));
-            }
-       }
+            alert(`${langData[currentLang]['formatIndentation']} ${langData[currentLang]['unsupportedMode']}`);
+        }
+    } catch (e) {
+        alert(`${langData[currentLang]['formatIndentation']} ${langData[currentLang]['formatError']}: ${e.message}`);
+    }
+}
 
-    let fileType = ''; 
-    function openUploadModal(type) {
-        fileType = type;
-        const modal = new bootstrap.Modal(document.getElementById('uploadModal'));
-        modal.show();
+function formatYamlContent() {
+    const content = aceEditorInstance.getValue();
+    try {
+        const yamlObject = jsyaml.load(content);
+        const formattedYaml = jsyaml.dump(yamlObject, { indent: 4 });
+        aceEditorInstance.setValue(formattedYaml, -1);
+        alert(langData[currentLang]['yamlFormatSuccess']);
+    } catch (e) {
+        alert(`${langData[currentLang]['yamlSyntaxError']}: ${e.message}`);
+    }
+}
+
+function detectContentFormat() {
+    const content = aceEditorInstance.getValue().trim();
+
+    if (isJsonDetected) {
+        document.getElementById("jsonValidationBtn").style.display = "inline-block";
+        document.getElementById("yamlValidationBtn").style.display = "none";
+        document.getElementById("yamlFormatBtn").style.display = "none";
+        return;
     }
 
-    const dropZone = document.getElementById('dropZone');
-    dropZone.addEventListener('dragover', (event) => {
-        event.preventDefault();
-        dropZone.classList.add('bg-light');
-    });
-
-    dropZone.addEventListener('dragleave', () => {
-        dropZone.classList.remove('bg-light');
-    });
-
-    dropZone.addEventListener('drop', (event) => {
-        event.preventDefault();
-        dropZone.classList.remove('bg-light');
-        const files = event.dataTransfer.files;
-        if (files.length > 0) {
-            handleFileUpload(files[0]);
+    try {
+        JSON.parse(content);
+        document.getElementById("jsonValidationBtn").style.display = "inline-block";
+        document.getElementById("yamlValidationBtn").style.display = "none";
+        document.getElementById("yamlFormatBtn").style.display = "none";
+        isJsonDetected = true;
+    } catch {
+        if (isYamlFormat(content)) {
+            document.getElementById("jsonValidationBtn").style.display = "none";
+            document.getElementById("yamlValidationBtn").style.display = "inline-block";
+            document.getElementById("yamlFormatBtn").style.display = "inline-block";
+        } else {
+            document.getElementById("jsonValidationBtn").style.display = "none";
+            document.getElementById("yamlValidationBtn").style.display = "none";
+            document.getElementById("yamlFormatBtn").style.display = "none";
         }
-    });
+    }
+}
 
-    document.getElementById('selectFileBtn').addEventListener('click', () => {
-        document.getElementById('fileInputModal').click();
-    });
+function openEditModal(fileName, fileType) {
+    document.getElementById('editingFileName').textContent = fileName;
+    document.getElementById('hiddenFileName').value = fileName;
+    document.getElementById('hiddenFileType').value = fileType;
 
-    document.getElementById('fileInputModal').addEventListener('change', (event) => {
-        const files = event.target.files;
-        if (files.length > 0) {
-            handleFileUpload(files[0]);
-        }
-    });
-
-    function handleFileUpload(file) {
-        const formData = new FormData();
-        formData.append(fileType === 'proxy' ? 'fileInput' : 'configFileInput', file);
-
-        fetch('', {
-            method: 'POST',
-            body: formData,
+    fetch(`?editFile=${encodeURIComponent(fileName)}&fileType=${fileType}`)
+        .then(res => res.text())
+        .then(data => {
+            document.getElementById('fileContent').value = data;
+            $('#editModal').modal('show');
         })
-            .then((response) => response.text())
-            .then((result) => {
-                alert(result);
-                location.reload(); 
+        .catch(err => console.error('Failed to retrieve file content:', err));
+}
+
+function syncEditorContent() {
+    document.getElementById('fileContent').value = document.getElementById('fileContent').value;
+}
+
+function updateEditorStatus() {
+    const cursor = aceEditorInstance.getCursorPosition();
+    const line = cursor.row + 1;
+    const column = cursor.column + 1;
+    const charCount = aceEditorInstance.getValue().length;
+
+    const lineColumnText = langData[currentLang]['lineColumnDisplay']
+        .replace("{line}", line)
+        .replace("{column}", column);
+    const charCountText = langData[currentLang]['charCountDisplay']
+        .replace("{charCount}", charCount);
+
+    document.getElementById('lineColumnDisplay').textContent = lineColumnText;
+    document.getElementById('charCountDisplay').textContent = charCountText;
+}
+
+$(document).ready(() => {
+    initializeAceEditor();
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const renameModal = document.getElementById('renameModal');
+    renameModal.addEventListener('show.bs.modal', event => {
+        const button = event.relatedTarget;
+        const oldFileName = button.getAttribute('data-filename');
+        const fileType = button.getAttribute('data-filetype');
+
+        document.getElementById("oldFileName").value = oldFileName;
+        document.getElementById("fileType").value = fileType;
+        document.getElementById("newFileName").value = oldFileName;
+    });
+});
+
+function toggleFullscreen() {
+    const modal = document.getElementById('fullScreenEditorModal');
+
+    if (!document.fullscreenElement) {
+        modal.requestFullscreen()
+            .then(() => {
+                document.getElementById('toggleFullscreenBtn').textContent = 'Exit Fullscreen';
+            })
+            .catch(err => console.error(`Error attempting to enable full-screen mode: ${err.message}`));
+    } else {
+        document.exitFullscreen()
+            .then(() => {
+                document.getElementById('toggleFullscreenBtn').textContent = 'Fullscreen';
+            })
+            .catch(err => console.error(`Error attempting to exit full-screen mode: ${err.message}`));
+    }
+}
+
+let fileType = '';
+
+function openUploadModal(type) {
+    fileType = type;
+    const modal = new bootstrap.Modal(document.getElementById('uploadModal'));
+    modal.show();
+}
+
+const dropZone = document.getElementById('dropZone');
+
+dropZone.addEventListener('dragover', e => {
+    e.preventDefault();
+    dropZone.classList.add('bg-light');
+});
+
+dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('bg-light');
+});
+
+dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('bg-light');
+    const files = e.dataTransfer.files;
+    if (files.length > 0) handleFileUpload(files[0]);
+});
+
+document.getElementById('selectFileBtn').addEventListener('click', () => {
+    document.getElementById('fileInputModal').click();
+});
+
+document.getElementById('fileInputModal').addEventListener('change', e => {
+    const files = e.target.files;
+    if (files.length > 0) handleFileUpload(files[0]);
+});
+
+function handleFileUpload(file) {
+    const formData = new FormData();
+    formData.append(fileType === 'proxy' ? 'fileInput' : 'configFileInput', file);
+
+    fetch('', {
+        method: 'POST',
+        body: formData
+    })
+        .then(res => res.text())
+        .then(result => {
+            alert(result);
+            location.reload();
         })
-            .catch((error) => {
-                alert('上传失败：' + error.message);
+        .catch(error => {
+            alert('上传失败：' + error.message);
         });
-    }
+}
 
-    function confirmDelete() {
-        return confirm(langData[currentLang]['confirmDelete']);
-    }
+function confirmDelete(name, event) {
+    let confirmMessage = translations['delete_confirm'] 
+        || '⚠️ Are you sure you want to delete "{name}"? This action cannot be undone!';
+    
+    confirmMessage = confirmMessage.replace('{name}', name);
+
+    showConfirmation(encodeURIComponent(confirmMessage), () => {
+        event.target.closest('form').submit();
+    });
+
+    return false;
+}
 </script>
     <div class="modal fade" id="downloadModal" tabindex="-1" aria-labelledby="downloadModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-lg">
@@ -1378,3 +1498,4 @@ function initializeAceEditor() {
     </div>
 </form>
 </div>
+

@@ -3,7 +3,7 @@ $neko_dir="/etc/neko";
 $neko_www="/www/nekobox";
 $neko_bin="/usr/bin/mihomo";
 $neko_status=exec("uci -q get neko.cfg.enabled");
-
+$current = basename($_SERVER['PHP_SELF']);
 $selected_config= exec("cat $neko_www/lib/selected_config.txt");
 $neko_cfg = array();
 $neko_cfg['redir']=exec("cat $selected_config | grep redir-port | awk '{print $2}'");
@@ -49,5 +49,37 @@ if (file_exists($singbox_config_path)) {
     $mixed_port = "Config file not found";
 }
 
+$title = "Nekobox";
+
+$configFile = '/etc/config/neko';
+$enabled = null;
+$singbox_enabled = null;
+$iconHtml = '';
+
+if (file_exists($configFile)) {
+    $lines = file($configFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        $line = trim($line);
+        if (strpos($line, '#') === 0 || strpos($line, '//') === 0) {
+            continue;
+        }
+        if (preg_match("/option\s+enabled\s+'(\d+)'/", $line, $matches)) {
+            $enabled = intval($matches[1]);
+        }
+        if (preg_match("/option\s+singbox_enabled\s+'(\d+)'/", $line, $matches)) {
+            $singbox_enabled = intval($matches[1]);
+        }
+    }
+}
+
+if ($singbox_enabled === 1) {
+    $title .= " - Singbox";
+    $iconHtml = '<img src="./assets/img/singbox.svg" alt="Singbox" class="me-2" style="width: 1.8rem; height: 1.8rem;">';
+} elseif ($enabled === 1) {
+    $title .= " - Mihomo";
+    $iconHtml = '<img src="./assets/img/mihomo.png" alt="Mihomo" class="me-1" style="width: 2.8rem; height: 2.8rem;">';
+} else {
+    $iconHtml = '<i class="bi bi-palette-fill me-2" style="color: var(--accent-color); font-size: 1.8rem;"></i>';
+}
 $footer = '<span class="footer-text">©2025 <b>Thaolga</b></span>';
 ?>
